@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 
-import { useNavigation } from '@react-navigation/core';
-import { StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 
 import arrowSvg from '../../assets/arrow.svg';
@@ -15,30 +14,14 @@ export type FieldProps = {
   routeParams?: Record<string, string>;
 };
 
-export const Field = ({ label, value, route, routeParams = {}, onChange, onSubmitEditing }: FieldProps) => {
-  const navigation = useNavigation<any>();
-
-  const onFieldPress = () => {
-    navigation.navigate(route, routeParams);
-  };
-
-  if (route) {
-    return (
-      <TouchableWithoutFeedback onPress={onFieldPress}>
-        <View>
-          <FieldView label={label || route} value={value} />
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  }
-
+export const Field = ({ label, value, onChange, onSubmitEditing }: FieldProps) => {
   return (
     <TextInput
-      autoFocus
       autoCapitalize="none"
+      placeholder={label}
       style={{ ...styles.root, ...styles.label }}
       value={value}
-      onChange={(e) => onChange?.(e.nativeEvent.text)}
+      onChangeText={(text) => onChange?.(text)}
       onSubmitEditing={onSubmitEditing}
     />
   );

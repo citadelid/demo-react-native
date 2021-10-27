@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Alert, StyleSheet, View } from 'react-native';
-import Toast from 'react-native-root-toast';
+import { Alert, StyleSheet, Text, TouchableWithoutFeedback, View } from 'react-native';
 
 import { AdditionalSettings } from '../../components/AdditionalSettings';
 import { Button } from '../../components/Button';
@@ -26,7 +25,7 @@ const products = {
 
 export const ProductScreen = ({ navigation }: NativeStackScreenProps<ProductStackParamList, 'Index'>) => {
   const [isWidgetVisible, setWidgetVisible] = useWidget();
-  const [productSettings] = useProductSettings();
+  const [productSettings, setProductSettings] = useProductSettings();
   const [product, setProduct] = useState('employment');
   const [bridgeToken, setBridgeToken] = useState('');
   const { log } = useConsole();
@@ -34,6 +33,10 @@ export const ProductScreen = ({ navigation }: NativeStackScreenProps<ProductStac
 
   useEffect(() => {
     console.log('getting bridge token');
+
+    if (!clientId || !accessKey) {
+      return;
+    }
 
     setBridgeToken('');
     fetch(`${process.env.CITADEL_API_HOST}/v1/bridge-tokens/`, {
@@ -105,17 +108,83 @@ export const ProductScreen = ({ navigation }: NativeStackScreenProps<ProductStac
               </FieldSet>
               <AdditionalSettings>
                 <FieldSet>
-                  <Field route="Company Mapping ID" value={productSettings.mappingId} />
-                  <Field route="Provider ID" value={productSettings.providerId} />
-                  {(product === 'deposit_switch' || product === 'pll') && (
-                    <>
-                      <Field route="Routing Number" value={productSettings.routingNumber} />
-                      <Field route="Account Number" value={productSettings.accountNumber} />
-                      <Field route="Bank Name" value={productSettings.bankName} />
-                      <Field route="Account type" value={productSettings.accountType} />
-                    </>
-                  )}
+                  <Field
+                    label="Company Mapping ID"
+                    value={productSettings.mappingId}
+                    onChange={(mappingId) => setProductSettings({ ...productSettings, mappingId })}
+                  />
+                  <View style={styles.description}>
+                    <Text style={styles.text}>
+                      Use the company mapping ID to skip the employer search step. For example, use IDs below:
+                    </Text>
+                    <Text style={styles.text}>Facebook</Text>
+                    <TouchableWithoutFeedback
+                      onPress={() =>
+                        setProductSettings({ ...productSettings, mappingId: '539aad839b51435aa8e525fed95f1688' })
+                      }
+                    >
+                      <Text style={styles.link}>539aad839b51435aa8e525fed95f1688</Text>
+                    </TouchableWithoutFeedback>
+                    <Text style={styles.text}>Kroger</Text>
+                    <TouchableWithoutFeedback
+                      onPress={() =>
+                        setProductSettings({ ...productSettings, mappingId: '3f45aed287064cbc91d28eff0424a72a' })
+                      }
+                    >
+                      <Text style={styles.link}>3f45aed287064cbc91d28eff0424a72a</Text>
+                    </TouchableWithoutFeedback>
+                    <Text style={styles.text}>Fannie Mae</Text>
+                    <TouchableWithoutFeedback
+                      onPress={() =>
+                        setProductSettings({ ...productSettings, mappingId: '4af9336b89294bc98879b1e38e6c72df' })
+                      }
+                    >
+                      <Text style={styles.link}>4af9336b89294bc98879b1e38e6c72df</Text>
+                    </TouchableWithoutFeedback>
+                  </View>
                 </FieldSet>
+                <FieldSet>
+                  <Field
+                    label="Provider ID"
+                    value={productSettings.providerId}
+                    onChange={(providerId) => setProductSettings({ ...productSettings, providerId })}
+                  />
+                  <View style={styles.description}>
+                    <Text style={styles.text}>
+                      Use the provider ID to skip selecting a payroll provider. For example, use{' '}
+                      <TouchableWithoutFeedback
+                        onPress={() => setProductSettings({ ...productSettings, providerId: 'adp' })}
+                      >
+                        <Text style={styles.link}>adp</Text>
+                      </TouchableWithoutFeedback>
+                      .
+                    </Text>
+                  </View>
+                </FieldSet>
+                {(product === 'deposit_switch' || product === 'pll') && (
+                  <FieldSet>
+                    <Field
+                      route="Routing Number"
+                      value={productSettings.routingNumber}
+                      onChange={(routingNumber) => setProductSettings({ ...productSettings, routingNumber })}
+                    />
+                    <Field
+                      route="Account Number"
+                      value={productSettings.accountNumber}
+                      onChange={(accountNumber) => setProductSettings({ ...productSettings, accountNumber })}
+                    />
+                    <Field
+                      route="Bank Name"
+                      value={productSettings.bankName}
+                      onChange={(bankName) => setProductSettings({ ...productSettings, bankName })}
+                    />
+                    <Field
+                      route="Account type"
+                      value={productSettings.accountType}
+                      onChange={(accountType) => setProductSettings({ ...productSettings, accountType })}
+                    />
+                  </FieldSet>
+                )}
               </AdditionalSettings>
             </View>
             <Button
@@ -155,5 +224,18 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderTopWidth: 1,
     borderColor: 'rgba(60, 60, 67, 0.29)',
+  },
+
+  description: {
+    margin: 16,
+  },
+  text: {
+    fontSize: 15,
+    lineHeight: 20,
+    color: 'rgba(60, 60, 67, 0.6)',
+    marginTop: 8,
+  },
+  link: {
+    color: 'rgba(13, 171, 76, 1)',
   },
 });

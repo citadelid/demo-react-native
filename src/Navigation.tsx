@@ -8,7 +8,7 @@ import productSvg from '../assets/product.svg';
 import settingsSvg from '../assets/settings.svg';
 
 import { ConsoleScreen } from './ConsoleScreen';
-import { Product } from './screens/product';
+import { ProductScreen } from './screens/product/ProductScreen';
 import { Settings } from './screens/settings';
 
 const Tab = createBottomTabNavigator();
@@ -46,7 +46,7 @@ export const Navigation = () => {
       }}
     >
       <Tab.Screen
-        component={Product}
+        component={ProductScreen}
         name="Product"
         options={() => ({
           tabBarIcon: ({ size, color }) => <SvgXml fill={color} height={size} width={size} xml={productSvg} />,

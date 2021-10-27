@@ -16,7 +16,7 @@ type ProductSettings = {
   routingNumber: string;
   accountNumber: string;
   bankName: string;
-  accountType: 'checking';
+  accountType: string;
 };
 
 const productSettingsState = atom<ProductSettings>({

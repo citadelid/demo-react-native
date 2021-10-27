@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "citadel-demo-expo",
-    "slug": "citadel-demo-expo",
+    "name": "citadel-demo",
+    "slug": "citadel-demo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,7 +18,9 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.citadelapi",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
